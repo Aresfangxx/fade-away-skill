@@ -89,39 +89,71 @@ read and render. They never open a journal entry or write a file unless you conf
 
 ## Install
 
-### 1. Add the skill
+### Step 1 — Add the skill
 
-Copy the `fade-away/` folder into your agent's skills directory:
+Pick whichever is easiest. All three drop the `fade-away/` skill folder into your
+agent's skills directory.
+
+#### Option A · Just ask your agent (no terminal)
+
+Paste this to Claude Code or Codex:
+
+> Install the Fade-away skill from `https://github.com/Aresfangxx/Fade-away`
+> into my skills directory, then set it up for my vault.
+
+The agent clones the repo, copies `fade-away/` into `~/.claude/skills/`
+(or `~/.agents/skills/` for Codex), and runs setup for you.
+
+#### Option B · One-line install (curl)
 
 ```bash
-# Claude Code
-cp -R fade-away ~/.claude/skills/fade-away
+# Claude Code (default → ~/.claude/skills/fade-away)
+curl -fsSL https://raw.githubusercontent.com/Aresfangxx/Fade-away/main/install.sh | sh
 
-# Codex
-cp -R fade-away ~/.agents/skills/fade-away
+# Codex (override the target directory)
+curl -fsSL https://raw.githubusercontent.com/Aresfangxx/Fade-away/main/install.sh \
+  | FADE_AWAY_SKILL_DIR="$HOME/.agents/skills/fade-away" sh
 ```
 
-### 2. Bootstrap a vault (first-time setup)
-
-The installer creates only what's missing and **never overwrites existing files**:
+#### Option C · Clone and copy
 
 ```bash
-python3 fade-away/scripts/bootstrap_vault.py \
+git clone https://github.com/Aresfangxx/Fade-away.git
+cp -R Fade-away/fade-away ~/.claude/skills/fade-away   # or ~/.agents/skills/fade-away
+```
+
+### Step 2 — Initialize your vault (just talk to the agent)
+
+You do **not** run any script yourself. Once the skill is installed, open your
+agent and say:
+
+> setup fade-away
+
+(`初始化`, `bootstrap`, or `install` work too.) The skill's bootstrap module then:
+
+1. asks for your vault location and time zone (or reads `FADE_AWAY_VAULT_ROOT`),
+2. shows you exactly what it will create and waits for your confirmation,
+3. creates only the missing folder skeleton — **never overwriting existing files** —
+   and records the `Vault root` + `Time zone` into your `AGENTS.md` / `CLAUDE.md`.
+
+That's it. From then on, greet the agent with `hi` and it offers to resume your
+last task.
+
+<details>
+<summary>Advanced: run the installer manually</summary>
+
+If you prefer to bootstrap without the agent, the script is idempotent and
+creates only missing files:
+
+```bash
+python3 ~/.claude/skills/fade-away/scripts/bootstrap_vault.py \
   --vault-root "/absolute/path/to/your/Obsidian/Vault" \
-  --timezone "Asia/Hong_Kong"        # change to your zone, e.g. America/New_York
+  --timezone "Asia/Hong_Kong"   # change to your zone, e.g. America/New_York
+
+# Flags: --dry-run, --agent-surface {agents,claude,both,none}
 ```
 
-Useful flags:
-
-- `--dry-run` — print what would be created without writing anything.
-- `--agent-surface {agents,claude,both,none}` — which instruction file(s) to write (default `both`).
-
-This writes the folder skeleton plus a `Vault root` and `Time zone` declaration
-into your `AGENTS.md` / `CLAUDE.md`, which the skill reads to resolve where and
-when to write.
-
-That's it. Start a chat with a greeting like `hi` and the skill will offer to
-resume your last task.
+</details>
 
 ---
 
