@@ -1,0 +1,6 @@
+interface:
+  display_name: "Fade Away"
+  short_description: "Track sessions and grow a personal LLM wiki from journaled work."
+  default_prompt: "Use $fade-away to track this session, keep the task index current, and surface reusable knowledge."
+policy:
+  allow_implicit_invocation: true
