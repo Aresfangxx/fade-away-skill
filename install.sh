@@ -3,7 +3,7 @@
 # Downloads the `fade-away/` skill folder into your agent's skills directory.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/Aresfangxx/Fade-away/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/Aresfangxx/fade-away-skill/main/install.sh | sh
 #
 # Override the install location with FADE_AWAY_SKILL_DIR, e.g. for Codex:
 #   curl -fsSL .../install.sh | FADE_AWAY_SKILL_DIR="$HOME/.agents/skills/fade-away" sh
@@ -13,7 +13,7 @@
 
 set -e
 
-REPO_URL="https://github.com/Aresfangxx/Fade-away"
+REPO_URL="https://github.com/Aresfangxx/fade-away-skill"
 TARBALL_URL="$REPO_URL/archive/refs/heads/main.tar.gz"
 DEST="${FADE_AWAY_SKILL_DIR:-$HOME/.claude/skills/fade-away}"
 
@@ -27,7 +27,7 @@ if command -v git >/dev/null 2>&1; then
   SRC="$TMP/repo/fade-away"
 elif command -v curl >/dev/null 2>&1; then
   curl -fsSL "$TARBALL_URL" | tar -xz -C "$TMP"
-  SRC="$TMP/Fade-away-main/fade-away"
+  SRC="$TMP/fade-away-skill-main/fade-away"
 else
   echo "Error: need either git or curl installed." >&2
   exit 1

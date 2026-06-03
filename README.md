@@ -98,7 +98,7 @@ agent's skills directory.
 
 Paste this to Claude Code or Codex:
 
-> Install the Fade-away skill from `https://github.com/Aresfangxx/Fade-away`
+> Install the Fade-away skill from `https://github.com/Aresfangxx/fade-away-skill`
 > into my skills directory, then set it up for my vault.
 
 The agent clones the repo, copies `fade-away/` into `~/.claude/skills/`
@@ -108,18 +108,18 @@ The agent clones the repo, copies `fade-away/` into `~/.claude/skills/`
 
 ```bash
 # Claude Code (default → ~/.claude/skills/fade-away)
-curl -fsSL https://raw.githubusercontent.com/Aresfangxx/Fade-away/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Aresfangxx/fade-away-skill/main/install.sh | sh
 
 # Codex (override the target directory)
-curl -fsSL https://raw.githubusercontent.com/Aresfangxx/Fade-away/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/Aresfangxx/fade-away-skill/main/install.sh \
   | FADE_AWAY_SKILL_DIR="$HOME/.agents/skills/fade-away" sh
 ```
 
 #### Option C · Clone and copy
 
 ```bash
-git clone https://github.com/Aresfangxx/Fade-away.git
-cp -R Fade-away/fade-away ~/.claude/skills/fade-away   # or ~/.agents/skills/fade-away
+git clone https://github.com/Aresfangxx/fade-away-skill.git
+cp -R fade-away-skill/fade-away ~/.claude/skills/fade-away   # or ~/.agents/skills/fade-away
 ```
 
 ### Step 2 — Initialize your vault (just talk to the agent)
