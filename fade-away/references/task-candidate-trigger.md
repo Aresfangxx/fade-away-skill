@@ -1,61 +1,66 @@
-# Task Candidate Trigger
+# Task Auto-Bind Trigger
 
-Use this module after the per-turn save when an unbound journal entry appears
-resumable but the visible output does not contain an explicit `➡️ 下一步`.
+Use this module after the per-turn save when an unbound journal entry lacks an
+explicit `➡️ 下一步`.
 
-Do not create or update any topic automatically.
+Default to creating or binding a `00 Tasks` topic for task-like sessions. Do not
+prompt first. Skip only trivial one-off Q&A, greetings, dashboard/lint-only
+reports, pure clarification, or sessions with no task nature.
 
 ## Skip
 
 Skip this check when:
 
 - `bound_topic` is set.
-- `bind_skipped = True`, `task_candidate_prompted = True`, or
-  `task_candidate_skipped = True`.
+- `bind_skipped = True`, `task_auto_bind_checked = True`, or
+  `task_auto_bind_skipped = True`.
 - The turn is dashboard-only, lint-report-only, weekly-index-only, or pure
   clarification.
 
-## Prompt Signals
+Also skip and set `task_auto_bind_skipped = True` when the entry is clearly:
 
-Prompt once when the active entry satisfies at least two signals:
+- A casual greeting or social exchange.
+- A simple answerable question with no file/action/project continuation.
+- A one-off translation, rewrite, calculation, lookup, or explanation that ends
+  with the answer.
+- A status/dashboard/lint/weekly report where the user did not ask to fix or
+  continue work.
 
-- The active entry has at least 3 saved progress lines.
-- The same vault-time day contains another entry with the same project keyword, such
-  as `ERP`, `MRP`, `CRM`, `MobileApp`, `DataPipeline`, `Codex`, or another obvious
-  project name.
-- The work produced a concrete deliverable: `PDF`, `HTML`, `DOCX`, `PPTX`,
-  script, test pass, QA screenshot, report, exported file, or deployed/running
-  UI.
-- The entry shows iterative continuation language: `继续`, `重导`, `QA`,
-  `用户反馈`, `修正`, `复查`, `口径`, `待确认`, or equivalent.
-- The entry or current work clearly matches a topic keyword in `_Index.md`.
-- There is a concrete continuation implied by the work, but no formal
-  `➡️ 下一步` marker was emitted.
+## Auto-Bind Signals
 
-## Prompt
+Create or bind a topic immediately when any signal is true:
 
-Output exactly one concise prompt:
+- The user asks to build, fix, debug, implement, refactor, write, revise,
+  create, update, install, configure, deploy, test, review, analyze, or maintain
+  a named artifact, project, workflow, or document.
+- The work creates, edits, configures, or validates a durable artifact: plugin,
+  config, script, source file, document, deck, report, exported file, deployed
+  service, or verified local runtime behavior.
+- The entry has at least 2 saved progress lines and a concrete continuation.
+- The entry shows a feedback/debug loop such as `用户反馈` -> `复现` -> `修复` ->
+  `验证`.
+- The user says a task should already exist or complains that task creation is
+  too passive.
+
+## Binding Target
+
+Read `<VAULT_ROOT>/00 Tasks/_Index.md`.
+
+- If one existing topic clearly matches, bind it.
+- Otherwise infer a short kebab-case topic filename from the durable artifact,
+  project, or goal, and create it.
+- Ask one short clarification question only when multiple existing topics match
+  equally or no defensible topic name can be inferred.
+
+Then read `references/promote-to-wiki.md` and follow the write/index/link rules
+with the target treated as already accepted. Start at its write step; do not
+show A/B/C choices.
+
+For the topic/index next-step, infer one concrete continuation from the active
+entry. If no defensible continuation exists, use:
 
 ```markdown
-📌 这个 entry 看起来已经是可续接任务。要绑到 `00 Tasks` 吗？
-- **A.** 现有 [[<matched-topic>]]
-- **B.** 新建 `<suggested-topic>.md`
-- **C.** 只留 journal
+- 下一步待用户确认。
 ```
 
-Omit option A if there is no clear existing topic match. Then set
-`task_candidate_prompted = True`.
-
-## User Reply
-
-- `A`, `嗯`, `好`, `用现有的` -> bind to option A, only if option A was shown.
-- `B`, `新建`, `新的` -> create the suggested topic, unless the user supplies
-  another valid kebab-case filename.
-- `C`, `不用`, `跳过`, `只留 journal` -> set `task_candidate_skipped = True`;
-  do not ask again for the active entry.
-
-For A/B, read `references/promote-to-wiki.md` and follow its write/index/link
-rules with the candidate prompt treated as already accepted. If no explicit next
-action exists, set the topic/index next-step to a one-line concrete continuation
-inferred from the active entry; if none is defensible, use
-`下一步待用户确认。`.
+Set `bound_topic = <topic>` and `task_auto_bind_checked = True`.

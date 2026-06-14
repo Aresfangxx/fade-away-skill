@@ -3,7 +3,7 @@
 Load this only when either:
 
 - The current session produced an explicit `➡️ 下一步` and `bound_topic` is `None`.
-- The user accepted a Task Candidate Trigger prompt from `SKILL.md`.
+- The Task Auto-Bind Trigger selected a target topic.
 
 ## Time Zone Rule
 
@@ -12,15 +12,20 @@ frontmatter `updated:` timestamps, session links, and `_Index.md` rows. All
 placeholders in this module are vault-time-derived values. Prefer `TZ=Asia/Hong_Kong date`
 when checking the current timestamp.
 
-## Step 1 - Propose Binding
+## Step 1 - Select Binding Target
 
-Read `<VAULT_ROOT>/00 Tasks/_Index.md`. Suggest binding to an existing topic
-only when the match is clear. Otherwise default to a new kebab-case filename.
+Read `<VAULT_ROOT>/00 Tasks/_Index.md`.
 
-Skip this step when `SKILL.md` already showed a Task Candidate prompt and the user
-accepted A or B. In that case, use the accepted topic choice directly.
+Skip this step when `task-candidate-trigger.md` selected an existing or inferred
+topic. In that case, use that topic directly and continue with Step 3.
 
-Output exactly this shape:
+For an unbound explicit `➡️ 下一步` with no selected topic, bind directly whenever
+the target is defensible: use a clear existing match if one exists; otherwise
+create an inferred kebab-case topic from the durable artifact, project, or goal.
+Ask one short clarification question only when multiple existing topics match
+equally or no defensible topic name can be inferred.
+
+When clarification is genuinely required, output exactly this shape:
 
 ```markdown
 📌 这个 session 看起来是 **<short inferred topic>**。绑到哪？
@@ -31,7 +36,11 @@ Output exactly this shape:
 
 If the index has no body rows, omit option A.
 
-## Step 2 - Wait For User
+## Step 2 - Handle Clarification Reply
+
+Run this step only when Step 1 asked the user to choose a binding target. For
+task auto-bind or a defensible explicit next-step target, skip directly to Step
+3.
 
 Interpret replies:
 
@@ -40,8 +49,8 @@ Interpret replies:
   valid filename.
 - `C`, `不用`, `跳过` -> set `bind_skipped = True`; do not ask again this session.
 
-If the reply is ambiguous, ask one clarification question. Do not write topic/index
-files before the user chooses A or B.
+If the reply is ambiguous, ask one clarification question. Do not write
+topic/index files before the user chooses A or B.
 
 ## Step 3 - Write Topic Page
 
@@ -74,7 +83,7 @@ For an existing page, modify only:
 
 Do not touch other sections.
 
-For Task Candidate binding without an explicit `➡️ 下一步`, infer one concrete
+For Task Auto-Bind binding without an explicit `➡️ 下一步`, infer one concrete
 continuation from the active entry. If no defensible continuation exists, use:
 
 ```markdown

@@ -90,7 +90,7 @@ Track internally:
 - `current_entry_title`: current short Chinese task title.
 - `bound_topic`: topic filename without `.md`, or `None`.
 - `bind_skipped`: `True` only after the user picks not to bind.
-- `task_candidate_prompted` / `task_candidate_skipped`: reset for each new
+- `task_auto_bind_checked` / `task_auto_bind_skipped`: reset for each new
   journal entry.
 - `knowledge_candidate_prompted` / `knowledge_candidate_skipped`: reset for
   each new journal entry.
@@ -187,9 +187,11 @@ Run these checks after the per-turn save:
    appeared, read `references/topic-update-protocol.md` if the active entry may
    meet the existing staleness thresholds. Keep the current automatic refresh
    behavior; do not convert it to a confirmation prompt unless the user asks.
-3. **Task candidate**: when the active entry is unbound and lacks an explicit
-   `➡️ 下一步`, read `references/task-candidate-trigger.md` to decide whether to
-   prompt. Do not create or update topics automatically.
+3. **Task auto-bind**: when the active entry is unbound and lacks an explicit
+   `➡️ 下一步`, read `references/task-candidate-trigger.md`. Create/bind a topic
+   automatically for task-like sessions; skip only trivial Q&A, greetings,
+   dashboard/lint-only reports, pure clarification, or sessions with no task
+   nature.
 4. **Knowledge candidate**: when reusable knowledge may have emerged and the
    user did not already ask for promotion, read
    `references/knowledge-candidate-trigger.md`. Do not create or update
@@ -231,13 +233,12 @@ Load low-frequency workflows only on demand:
   instruction/context surfaces such as `AGENTS.md`, `CLAUDE.md`, project
   structure notes, and Knowledge inheritance; report drift without writing
   until confirmed.
-- `references/task-candidate-trigger.md`: propose binding a substantial
-  unbound entry to `00 Tasks` without writing until confirmed.
+- `references/task-candidate-trigger.md`: auto-bind substantial unbound task
+  entries to `00 Tasks`; skip trivial or non-task sessions.
 - `references/topic-update-protocol.md`: update bound topic pages, refresh
   `_Index.md`, and run the current Topic Auto-Refresh behavior.
 - `references/promote-to-wiki.md`: bind an unbound journal entry to a topic page
-  and update `_Index.md` after an explicit `➡️ 下一步` or accepted task
-  candidate.
+  and update `_Index.md` after an explicit `➡️ 下一步` or task auto-bind trigger.
 - `references/render-dashboard.md`: render a read-only task dashboard from
   `_Index.md`.
 - `references/render-weekly-index.md`: generate or update an on-demand weekly
