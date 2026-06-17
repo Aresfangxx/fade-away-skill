@@ -94,6 +94,8 @@ Track internally:
   journal entry.
 - `knowledge_candidate_prompted` / `knowledge_candidate_skipped`: reset for
   each new journal entry.
+- `knowledge_context_checked`: `True` after the current user request has passed
+  the Knowledge Retrieval Gate, or when the gate is intentionally skipped.
 - `tracking_disabled`: `True` only if the user opts out for this session.
 
 ## Start Of Conversation
@@ -111,7 +113,20 @@ Track internally:
 
    Then read the recent entry so this response does not contradict parallel
    work. If no recent overlapping entry exists, skip silently.
-3. Dispatch on the user's first message, in order:
+3. Run the Knowledge Retrieval Gate for any substantive request before relying
+   only on `_Index.md`, today's journal, or the matched topic page. Read
+   `references/knowledge-retrieval-trigger.md` when the request is about a
+   project/domain/person/method that may have durable context in
+   `<VAULT_ROOT>/02 Knowledge/`, or when the user asks for context, analysis,
+   decisions, strategy, continuation, review, writing style, reusable workflow,
+   or older work. Use inventory-first routing: list the live Knowledge tree,
+   derive current folders/projects from it, then match filenames, H1/title,
+   aliases, tags, `status: canonical`, navigation pages, and source-of-truth
+   pages before any broad body search. Skip only greetings awaiting
+   confirmation, dashboard/lint-only reports, pure journal bookkeeping, atomic
+   utility queries, and cases where no relevant Knowledge hit exists after this
+   metadata-first pass.
+4. Dispatch on the user's first message, in order:
    - Bootstrap/setup intent (`install fade-away`, `setup`, `bootstrap`,
      `初始化`, `第一次使用`, `开源部署`, or a missing `_Index.md` plus a user
      request to initialize): read `references/bootstrap-vault.md`. Bootstrap is
@@ -156,7 +171,8 @@ header at the bottom of that section:
 - Bound: `### HH:MM ▶️ <短中文标题> → [[00 Tasks/<bound_topic>]]`
 
 Store `current_entry_start`, `current_entry_date`, and `current_entry_title`.
-Reset task and knowledge candidate flags for the new entry.
+Reset task, knowledge candidate, and knowledge retrieval flags for the new
+entry.
 
 ## Per-Turn Save
 
@@ -245,6 +261,10 @@ Load low-frequency workflows only on demand:
   MOC in `03 Journal/<YYYY-MM>/<YYYY-Wnn>/YYYY-Wnn 周索引.md`.
 - `references/lint-vault-memory.md`: render a read-only health report for task,
   journal, weekly index, and knowledge layers.
+- `references/knowledge-retrieval-trigger.md`: before substantive work,
+  inventory the live `02 Knowledge/` tree, rank candidates from metadata, and
+  read a small number of relevant pages so older durable context, methods, and
+  project facts can influence the answer.
 - `references/knowledge-candidate-trigger.md`: propose reusable journal material
   for `02 Knowledge/` without writing until confirmed.
 - `references/promote-to-knowledge.md`: create or update curated pages under
