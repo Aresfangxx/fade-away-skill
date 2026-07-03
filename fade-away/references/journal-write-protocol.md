@@ -5,12 +5,12 @@ date ambiguity, recording pitfall lines, or rebasing around concurrent writes.
 
 ## vault-time Boundary
 
-All journal paths and `HH:MM` lines use `Asia/Hong_Kong`. Harness/system date
-hints may reflect the local machine timezone and can lag vault-time near midnight. If
-there is any conflict, run:
+All journal paths and `HH:MM` lines use the configured vault time zone.
+Harness/system date hints may reflect the local machine timezone and can lag
+vault-time near midnight. If there is any conflict, run:
 
 ```bash
-TZ=Asia/Hong_Kong date
+TZ=<IANA_TIME_ZONE> date
 ```
 
 Then derive the journal filename, ISO week, weekly index path, and progress-line
@@ -19,7 +19,7 @@ time from that vault-time result.
 When the week is unknown, derive ISO week with:
 
 ```bash
-TZ=Asia/Hong_Kong date -j -f "%Y-%m-%d" "<YYYY-MM-DD>" "+%G-W%V"
+TZ=<IANA_TIME_ZONE> date -j -f "%Y-%m-%d" "<YYYY-MM-DD>" "+%G-W%V"
 ```
 
 ## Journal Directory Layout
@@ -57,25 +57,15 @@ type: journal
 ## 🕐 任务时间线
 ```
 
-**Three template sources must stay in sync** (changing one without the others
-will cause new daily notes to inherit stale sections depending on how they are
-opened):
+**Four template sources must stay in sync**:
 
-1. `~/.claude/skills/fade-away/references/journal-write-protocol.md` — this file
-   (Claude / Anthropic clients).
-2. `~/.agents/skills/fade-away/references/journal-write-protocol.md` — Codex /
-   agents mirror.
-3. `<VAULT_ROOT>/04 Templates/Daily Note.md` — Obsidian's built-in
-   `daily-notes` core plugin uses this template when the user clicks "Open
-   today's daily note". Configured in `.obsidian/daily-notes.json`.
+1. Claude side: `~/.claude/skills/fade-away/references/journal-write-protocol.md`.
+2. Codex side: `~/.agents/skills/fade-away/references/journal-write-protocol.md`.
+3. Obsidian Daily Notes template: `<VAULT_ROOT>/04 Templates/Daily Note.md`.
+4. Bootstrap script template: `scripts/bootstrap_vault.py`.
 
-When you change the template body, update all three. Verify with:
-
-```bash
-cat "<VAULT_ROOT>/04 Templates/Daily Note.md"
-diff ~/.claude/skills/fade-away/references/journal-write-protocol.md \
-     ~/.agents/skills/fade-away/references/journal-write-protocol.md
-```
+When you change the template body, update all four. Sync mechanics and
+verification live in `references/context-check.md`.
 
 ## Append Placement
 
@@ -86,9 +76,17 @@ Progress lines default to:
 ```
 
 Append the line at the end of the active entry body, immediately before the next
-`### ` timeline header or EOF. Locate the active entry by its stored
-`### HH:MM ▶️ ...` header. Do not insert repeatedly right under the header. Do
-not rewrite earlier progress lines.
+`### ` timeline header. Locate the active entry by matching the complete stored
+header line: `### HH:MM ▶️ <current_entry_title>` plus the topic suffix when
+present. Time alone is not a safe anchor. Do not insert repeatedly right under
+the header. Do not rewrite earlier progress lines.
+
+Fall back to end-of-file only after confirming the active entry is the final
+`### ` block in the file. After the edit, verify the new line sits between the
+target header and its next `### ` sibling; if another header intervenes, re-read
+and rebase. If the stored header is unavailable, run State Recovery in
+`SKILL.md`; never blindly anchor to the last `### ` block, which may belong to a
+parallel session.
 
 ## Concurrent Writes
 
@@ -107,6 +105,27 @@ clobbering other sessions:
 5. Bash append is the last-resort fallback. Use it only after confirming your
    active entry is the final `### ` block in the file. If a newer entry sits
    below yours, shell append misattributes the line.
+6. Parallel subagents must not append to the journal themselves and must not
+   open sibling entries. The main thread owns journal writes and records on
+   their behalf.
+
+### `_Index.md`
+
+`_Index.md` updates are also concurrent writes. Before editing, re-read
+`<VAULT_ROOT>/00 Tasks/_Index.md` immediately. Only perform line-level
+edits anchored by a unique complete old row or by the unique table separator
+row; never rewrite the whole table from a stale copy.
+
+If an edit conflicts, re-read the latest table and replay only this topic's
+single-row upsert. After writing, verify these invariants:
+
+- Every other topic row that existed immediately before the write still exists.
+- No other topic row moved backward in timestamp or content.
+- Row count did not decrease unless this is an explicitly confirmed fade-out
+  move.
+
+Concurrent new rows from other sessions are legal. A fade-out move is a separate
+lint/dashboard-confirmed operation and is exempt from the non-decrease invariant.
 
 ## Pitfall Lines
 

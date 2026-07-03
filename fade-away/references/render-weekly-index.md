@@ -21,8 +21,7 @@ parent path if the month or week folder does not yet exist.
 ## Time Zone Rule
 
 Resolve `本周`, `上周`, the most recently completed week, `created:` dates, journal
-filenames, and journal save times using the configured vault time zone (`GMT+8` /
-`Asia/Hong_Kong`). Do not use the machine local timezone if it differs.
+filenames, and journal save times using the configured vault time zone. Do not use the machine local timezone if it differs from vault-time.
 
 ## Step 1 - Resolve Target Week
 
@@ -66,6 +65,8 @@ Create a weekly MOC, not a transcript. Compress daily entries into:
 
 Preserve important caveats marked with `⚠️`, unresolved confirmations, and explicit
 next actions. Avoid inventing status not supported by the daily journals.
+Weekly indexes double as the retrieval router for the journal layer; keep
+daily-journal anchors in the main-thread sections for `history-retrieval.md`.
 
 ## Step 4 - Write Safely
 
@@ -82,7 +83,7 @@ tags: [journal, moc, weekly-index]
 ```
 
 Add topic-specific tags only when they are obvious from the week, such as
-`api-gateway`, `data-pipeline`, or `research-notes`.
+`sfeg-singapore`, `codex-agents`, or `future-school`.
 
 If the weekly index already exists:
 

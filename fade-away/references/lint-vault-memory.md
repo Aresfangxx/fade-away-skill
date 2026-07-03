@@ -7,7 +7,7 @@ explicitly confirms a follow-up fix or promotion.
 
 ## Time Zone Rule
 
-Use the configured vault time zone (`GMT+8` / `Asia/Hong_Kong`) for default scan windows, `today`,
+Use the configured vault time zone for default scan windows, `today`,
 `yesterday`, week boundaries, and any journal entries opened after fixes.
 
 ## Scope
@@ -15,12 +15,19 @@ Use the configured vault time zone (`GMT+8` / `Asia/Hong_Kong`) for default scan
 Inspect these layers when present:
 
 - `<VAULT_ROOT>/00 Tasks/_Index.md`
-- `<VAULT_ROOT>/00 Tasks/*.md`
+- `<VAULT_ROOT>/00 Tasks/**/*.md`
 - `<VAULT_ROOT>/03 Journal/<YYYY-MM>/<YYYY-Wnn>/YYYY-MM-DD.md`
   (`<YYYY-MM>` = date's own month)
 - `<VAULT_ROOT>/03 Journal/<YYYY-MM>/<YYYY-Wnn>/YYYY-Wnn 周索引.md`
   (`<YYYY-MM>` = Sunday's month)
 - `<VAULT_ROOT>/02 Knowledge/**/*.md`
+- Current project's harness auto-memory directory when applicable (Claude Code:
+  `~/.claude/projects/<project-slug>/memory/*.md`). Check only for broken vault
+  paths or durable conclusions that should be nominated into `02 Knowledge/`.
+  Vault stores the content; harness memory should store pointers. `fade-away`
+  only nominates MEMORY.md changes and never writes them.
+- `~/.codex/memories/` belongs to Codex's own memory system. Include
+  it only when the user explicitly names it.
 
 Use a narrow time window unless the user asks for a full audit:
 
@@ -38,6 +45,12 @@ Use a narrow time window unless the user asks for a full audit:
 - Duplicate topic rows.
 - Malformed table rows, including unescaped literal `|` in next-step cells.
 - Topic statuses that conflict with dashboard visibility.
+- Fade candidates: active rows older than 10 vault-time days, completed topic pages, or
+  index next-steps starting with `—（已完成）`. Report as P1 with the suggested
+  FADE branch; do not move files.
+- Active main-table rows with a `FADE/` prefix. Active rows must use bare
+  `[[<topic>]]`; FADE paths belong only in the graveyard.
+- Main index and FADE index/list membership conflicts.
 
 ### Journal-Topic Consistency
 
@@ -116,6 +129,9 @@ Scope: <files/date range scanned>
 
 ### Stale Or Conflicting Tasks
 - ...
+
+### Fade Candidates
+- [P1/P2/P3] <topic> — <why> — suggested destination: `00 Tasks/FADE/<branch>/`
 
 ### Journal / Topic Link Gaps
 - ...

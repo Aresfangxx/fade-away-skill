@@ -29,8 +29,16 @@ Check only surfaces that plausibly affect the current workspace:
 - Active topic page and `<VAULT_ROOT>/00 Tasks/_Index.md` when a topic
   is bound.
 - Matching `02 Knowledge` pages when the current task already depends on them.
+- `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md` fade-away / Task Tracker
+  designation sections when maintaining this workflow.
+- Canonical Knowledge pages describing the workflow, especially
+  `<VAULT_ROOT>/02 Knowledge/AI 工作流/fade-away-记忆架构.md`, when a turn
+  changes `fade-away` behavior.
+- `<VAULT_ROOT>/04 Templates/Daily Note.md` because Obsidian's Daily
+  Notes core plugin reads it via `.obsidian/daily-notes.json`.
 - Skill mirrors when maintaining a skill, especially `.agents` and `.claude`
-  copies that should stay behaviorally aligned.
+  copies that should stay behaviorally aligned. Run `scripts/sync_check.sh`
+  from the skill directory when present.
 
 Prefer exact files near the current cwd over broad vault scans.
 
@@ -45,11 +53,16 @@ Report a drift candidate when you find concrete evidence such as:
   instruction surface still omits.
 - `.agents` and `.claude` skill mirrors differ in behavior, not just in
   mirror-specific self-description.
+- A skill or workflow's behavior has changed, but the canonical Knowledge page
+  describing it still documents the old behavior.
+- Live skill has behavior-level changes not yet ported to the public repo
+  checkout, which is a semantic port: local time-zone wording -> vault-time and
+  absolute paths -> `<VAULT_ROOT>`, not a byte mirror.
 - A user-facing next step depends on context that future sessions would not
   discover from the current instruction surfaces.
 
-Ignore harmless differences such as file-specific `this file` wording,
-formatting-only changes, or intentionally local project rules.
+Ignore harmless differences such as formatting-only changes or intentionally
+local project rules.
 
 ## Output Contract
 

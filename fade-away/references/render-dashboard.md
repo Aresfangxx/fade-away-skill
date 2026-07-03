@@ -4,8 +4,7 @@ Load this only when the user asks for a task overview. Do not modify files.
 
 ## Time Zone Rule
 
-Interpret `_Index.md` timestamps and relative labels using the configured vault time zone (`GMT+8` /
-`Asia/Hong_Kong`). `今天` and `昨天` are vault-time calendar dates.
+Interpret `_Index.md` timestamps and relative labels using the configured vault time zone. `今天` and `昨天` are vault-time calendar dates.
 
 ## Step 1 - Read Index
 
@@ -63,6 +62,11 @@ Output:
 ```
 
 For empty tiers, use `- （无）`. Keep topic order from `_Index.md` within each tier.
+
+If an active row is more than 10 vault-time calendar days old or its next-step starts
+with `—（已完成）`, add a short read-only fade-out candidate note after the
+dashboard. Do not move files; confirmed archive operations use
+`references/fade-out-protocol.md`.
 
 ## Step 5 - Wait
 

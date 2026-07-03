@@ -44,11 +44,15 @@ Create or bind a topic immediately when any signal is true:
 
 ## Binding Target
 
-Read `<VAULT_ROOT>/00 Tasks/_Index.md`.
+Read `<VAULT_ROOT>/00 Tasks/_Index.md`, including the active table and
+the graveyard section.
 
 - If one existing topic clearly matches, bind it.
+- If the only clear match is under FADE, ask whether to un-fade it or create a
+  derivative new topic; do not bind the FADE path directly.
 - Otherwise infer a short kebab-case topic filename from the durable artifact,
-  project, or goal, and create it.
+  project, or goal. Before creating it, confirm no same-name page exists under
+  `<VAULT_ROOT>/00 Tasks/FADE/**/`.
 - Ask one short clarification question only when multiple existing topics match
   equally or no defensible topic name can be inferred.
 

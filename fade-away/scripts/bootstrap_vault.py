@@ -31,7 +31,7 @@ created: "{{date}}"
 type: journal
 ---
 
-# {{date}} {{weekday}}
+# {{date:YYYY-MM-DD dddd}}
 
 ## 🕐 任务时间线
 """

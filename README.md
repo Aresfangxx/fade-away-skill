@@ -27,7 +27,9 @@ It maintains five durable surfaces, each more curated than the last:
 
 `Journal → Topic page → Task index → Weekly MOC → Knowledge wiki`
 
-Everything is written **only with your confirmation**. The skill suggests; you decide.
+Routine continuity is automatic: useful turns get a one-line journal save, and
+task-like sessions can auto-bind to a topic. Curated knowledge writes, archive
+moves, bootstrap setup, and fixes from audits stay confirmation-gated.
 
 ---
 
@@ -78,10 +80,14 @@ read and render. They never open a journal entry or write a file unless you conf
 
 - **Per-turn save** — every substantive turn appends one timestamped progress line; nothing useful is lost between turns.
 - **Resume, don't restart** — a fresh chat reads the task index and continues from the last real next step.
+- **Knowledge retrieval gate** — substantive work can pull a small, relevant slice of your `02 Knowledge/` layer before answering.
 - **Task switching** — bound topic pages remember scope, status, decisions, and the next action per project.
+- **Task auto-bind** — task-like unbound sessions create or bind a topic without waiting for a prompt.
+- **History retrieval** — “when/how did we fix this?” routes through topics, weekly indexes, and dated journals instead of broad vault grep.
 - **Weekly roll-ups** — on-demand map-of-content for any ISO week.
 - **Human-gated knowledge base** — tested lessons become reusable rules only with your approval.
-- **Read-only audits** — dashboard, weekly index, and memory-health lint that never mutate files.
+- **Fade-out protocol** — stale or completed tasks can be nominated into `00 Tasks/FADE/`, then archived only after confirmation.
+- **Read-only audits** — dashboard, weekly index, and memory-health lint render reports before any fix.
 - **Plain Markdown + Obsidian** — your data, your vault, fully portable. No database, no lock-in.
 - **Configurable** — vault root and time zone are read from your `AGENTS.md` / `CLAUDE.md`.
 
@@ -185,7 +191,7 @@ Fade-away reads two settings from your vault's `AGENTS.md` / `CLAUDE.md`:
 
 ## Safety & design principles
 
-- **Suggest first, write after confirmation** — knowledge and topic promotion always ask before writing.
+- **Automatic low-level continuity, confirmed high-level curation** — per-turn logs and task auto-bind keep work resumable; knowledge promotion, archive moves, bootstrap setup, and audit fixes ask before writing.
 - **Read-only views stay read-only** — dashboard, weekly index, and lint render reports; they do not mutate files.
 - **Never delete, move, or overwrite** existing vault files unless you explicitly ask.
 - **Bootstrap only creates what's missing** — existing files are skipped, never clobbered.
@@ -201,7 +207,7 @@ Fade-away reads two settings from your vault's `AGENTS.md` / `CLAUDE.md`:
     ├── SKILL.md            # the hot-path operating contract
     ├── references/         # low-frequency workflow modules, loaded on demand
     ├── agents/openai.yaml  # Codex / OpenAI agent manifest
-    └── scripts/bootstrap_vault.py
+    └── scripts/            # bootstrap_vault.py, sync_check.sh
 ```
 
 ## License

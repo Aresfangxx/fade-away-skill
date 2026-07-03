@@ -19,8 +19,8 @@ Before creating files, identify:
 - Vault root: ask when unclear. Prefer an absolute path. For portable/open-source
   installs, support `FADE_AWAY_VAULT_ROOT`.
 - Agent surfaces: whether to create `AGENTS.md`, `CLAUDE.md`, or both.
-- Time zone: default `Asia/Hong_Kong` only for this user's vault; for a public
-  install, ask or preserve the user's local preference.
+- Time zone: default `Asia/Hong_Kong` unless the user supplies another IANA time
+  zone; preserve an existing local preference.
 
 If the target path already contains notes, treat it as an existing vault. Never
 delete, move, or overwrite existing files.

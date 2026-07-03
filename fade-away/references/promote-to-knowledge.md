@@ -5,7 +5,7 @@ knowledge wiki page under `<VAULT_ROOT>/02 Knowledge/`.
 
 ## Time Zone Rule
 
-Use the configured vault time zone (`GMT+8` / `Asia/Hong_Kong`) for `created:`, `updated:`,
+Use the configured vault time zone for `created:`, `updated:`,
 journal source links, and journal save entries.
 
 ## Purpose
@@ -68,7 +68,12 @@ Default root:
 <VAULT_ROOT>/02 Knowledge/
 ```
 
-Choose a small domain folder when obvious. Suggested initial domains:
+List the live top-level folders under `<VAULT_ROOT>/02 Knowledge/` and
+choose the smallest fitting domain from the current structure. Propose a new
+folder only when none fits.
+
+If `02 Knowledge/` is empty in a fresh vault/bootstrap scenario, use these
+initial domains:
 
 - `AI 工作流/`
 - `文档生产/`

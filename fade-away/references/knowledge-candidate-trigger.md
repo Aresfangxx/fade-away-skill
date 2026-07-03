@@ -6,7 +6,7 @@ may contain reusable knowledge. This module proposes candidates; it must not wri
 
 ## Time Zone Rule
 
-Use the configured vault time zone (`GMT+8` / `Asia/Hong_Kong`) for any journal source links,
+Use the configured vault time zone for any journal source links,
 candidate timestamps, and later handoff to `promote-to-knowledge.md`.
 
 ## Purpose
@@ -42,11 +42,9 @@ If quality is unclear, do nothing. Avoid noisy prompts.
 
 Suggest a destination only when it is defensible from the active entry:
 
-- `02 Knowledge/AI 工作流/<page>.md`
-- `02 Knowledge/文档生产/<page>.md`
-- `02 Knowledge/个人方法论/<page>.md`
-- `02 Knowledge/项目管理/<page>.md`
-- `02 Knowledge/技术排错/<page>.md`
+List the live top-level folders under `<VAULT_ROOT>/02 Knowledge/` (one
+`ls`) and suggest a destination from them. Propose a new folder only when none
+fits the candidate.
 
 Use a short Chinese title and a concise kebab-case or readable Chinese filename
 that matches existing `02 Knowledge/` style. If the domain is unclear, omit the

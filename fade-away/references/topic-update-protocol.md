@@ -20,10 +20,13 @@ When `bound_topic` is set and the visible output contains an explicit
      `- YYYY-MM-DD HH:MM → [[YYYY-MM-DD#HH:MM]]` using the vault-time date/time, only
      if that vault-time date is not already listed. Drop any `03 Journal/` prefix;
      Obsidian resolves the link by basename.
-3. Update `_Index.md`: remove any existing row for this topic and insert a
-   fresh row at the top of the table body.
+3. Update `_Index.md`: follow the concurrent-write rules in
+   `journal-write-protocol.md`, remove any existing active-table row for this
+   topic, and insert a fresh row at the top of the table body.
 4. Sanitize the index next-step before writing: collapse newlines to spaces,
-   trim whitespace, and escape literal `|` as `\|`.
+   trim whitespace, escape literal `|` as `\|`, and compress it to one
+   next-action sentence, <= ~120 characters. When the topic page lists multiple
+   items, write only the top-priority action plus `（余 N 项见 topic 页）`.
 5. Read `_Index.md` back after writing. Confirm the topic has exactly one row
    and the Markdown table still has three columns per body row.
 
@@ -33,17 +36,16 @@ The Promotion Trigger fires only on an explicit `➡️ 下一步`. Long session
 accumulate many progress lines without that marker, leaving the bound topic's
 `## 📍 现状` stale even though the journal has the latest truth.
 
-When `bound_topic` is set and either condition holds after the per-turn save,
-refresh the topic page even without an explicit next-step:
-
-- The active entry has accumulated >= 5 new progress lines since the topic page
-  was last written. Count `(HH:MM)` lines under the current entry header whose
-  timestamps are newer than the topic frontmatter `updated:`.
-- The topic frontmatter `updated:` is more than 2 vault-time hours behind the latest
-  progress line in the active entry.
+When `bound_topic` is set and either staleness threshold defined in SKILL.md
+Post-Save Check #2 holds after the per-turn save, refresh the topic page even
+without an explicit next-step. Count `(HH:MM)` lines under the current entry
+header whose timestamps are newer than the topic frontmatter `updated:`.
 
 Skip the refresh when the turn is pure clarification, dashboard-only, lint-only,
 or weekly-index-only.
+Skip the refresh and ask `这些进展像是另一个任务，要切 entry 吗？` when the new
+progress lines clearly belong to a different project or deliverable than the
+bound topic.
 
 The refresh follows the explicit update rules with these adjustments:
 
